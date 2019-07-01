@@ -39,7 +39,7 @@ void Performer::step() {
   if (currNote->midi != 0 && dNote < currNoteLen * 0.9) {
     if (micros() - lastPeak > period) {
       #ifndef __linux__
-//        digitalWrite(pin, high ? LOW : HIGH);
+        digitalWrite(pin, high ? LOW : HIGH);
       #endif
       high = !high;
       lastPeak = micros();
@@ -52,7 +52,7 @@ void Performer::step() {
     if (currNote->midi < MIDI_MIN) {
       period = 0;
       #ifdef __linux__
-//        std::cout << "Midi value " << (int) currNote->midi << " (below min)" << std::endl;
+        std::cout << "Midi value " << (int) currNote->midi << " (below min)" << std::endl;
       #endif
     } else if (currNote->midi > MIDI_MAX) {
       period = periods[MIDI_MAX - MIDI_MIN - 1];
@@ -65,19 +65,18 @@ void Performer::step() {
         std::cout << "Midi value " << (int) currNote->midi << std::endl;
       #endif
     }
+    high = true;
     currNoteLen = currNote->len * NOTE_LENGTH * ((i % 2) ? 0.333 : 0.666);
     #ifdef __linux__
       if (period != 0) {
         std::cout << i << '\t' << period << '\t' << millis() << std::endl;
       }
     #endif
+  } else {
+    high = false;
   }
 }
 
 bool Performer::playing() {
   return currNote->midi != 0 && millis() - startNote < currNoteLen;
-}
-
-bool Performer::isHigh() {
-  return high;
 }

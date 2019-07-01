@@ -71,9 +71,7 @@ Bassline::Bassline(char key) {
   for (char i = 0; i < RESOLUTION / 4; ++i) {
     rhythm[i] = Note(1, 1);
   }
-  for (char i = RESOLUTION / 4; i < RESOLUTION; ++i) {
-    rhythm[i] = Note(0, 1);
-  }
+  rhythm[RESOLUTION / 4] = Note(0, 3 * RESOLUTION / 4);
 }
 
 Note* Bassline::getNoteAt(unsigned short tick) {

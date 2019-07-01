@@ -7,9 +7,9 @@
 #define LEN_SCALE 6
 const char SCALE[] = {3, 2, 1, 1, 3, 2};
 const char BASSLINE[] = {
-  0, 0, 0 , 0,
-  5, 5, 0 , 0,
-  7, 5, 0 , 7
+  0, 0, 0, 0,
+  5, 5, 0, 0,
+  7, 5, 0, 0
 };
 
 struct Note {

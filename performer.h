@@ -21,7 +21,6 @@ class Performer {
     ~Performer();
     void step();
     bool playing();
-    bool isHigh();
 };
 
 #ifdef __linux__

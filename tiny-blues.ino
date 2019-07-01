@@ -6,7 +6,7 @@
 #define PIN_BASS 0
 
 Melody melody(60);
-Bassline bassline(60);
+Bassline bassline(60 - 12);
 Performer playMelody(melody, PIN_MELODY);
 Performer playBass(bassline, PIN_BASS);
 int periods[MIDI_MAX - MIDI_MIN];
@@ -91,15 +91,10 @@ void loop() {
   long lastSwitch = millis();
   
   while (millis() - startSong < NOTE_LENGTH * RESOLUTION * 12 * 6) {
-    playBass.step();
-    playMelody.step();
-    if (playMelody.playing() != playBass.playing() || playMelody.isHigh() && playBass.isHigh()) {
-      analogWrite(PIN_BASS, 255);
-    } else if (playMelody.isHigh() || playBass.isHigh()) {
-      analogWrite(PIN_BASS, 64);
-    } else {
-      analogWrite(PIN_BASS, 0);
-    }
+//    playBass.step();
+//    if (!playBass.playing()) {
+      playMelody.step();
+//    }
   }
   
   delay(NOTE_LENGTH * 4);
