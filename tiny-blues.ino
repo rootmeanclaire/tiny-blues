@@ -2,7 +2,7 @@
 #include "performer.h"
 
 #define MIDI_A4 69
-#define PIN_MELODY 0
+#define PIN_MELODY 1
 #define PIN_BASS 0
 
 Melody melody(60);
@@ -88,10 +88,9 @@ void loop() {
 //    }
     
   long startSong = millis();
-  long lastSwitch = millis();
   
   while (millis() - startSong < NOTE_LENGTH * RESOLUTION * 12 * 6) {
-//    playBass.step();
+    playBass.step();
 //    if (!playBass.playing()) {
       playMelody.step();
 //    }

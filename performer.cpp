@@ -3,6 +3,7 @@
   #include <iostream>
   #include <chrono>
   #include <thread>
+  #include <SFML/Audio.hpp>
 #else
   #include <Arduino.h>
 #endif
@@ -27,6 +28,9 @@ Performer::Performer(Part& part, char pin) {
   high = false;
   lastPeak = 0;
   currNoteLen = currNote->len * NOTE_LENGTH * ((i % 2) ? 0.333 : 0.666);
+  #ifdef __linux__
+    lastSample = 0;
+  #endif
 }
 
 Performer::~Performer() {
@@ -36,6 +40,12 @@ Performer::~Performer() {
 void Performer::step() {
   int dNote = millis() - startNote;
   
+  #ifdef __linux__
+    if (micros() - lastSample > 1000000 / SAMPLE_RATE) {
+      samples.push_back(high);
+      lastSample = micros();
+    }
+  #endif
   if (currNote->midi != 0 && dNote < currNoteLen * 0.9) {
     if (micros() - lastPeak > period) {
       #ifndef __linux__
@@ -46,32 +56,37 @@ void Performer::step() {
     }
   } else if (dNote > currNoteLen) {
     i++;
-    startNote = millis();
-    delete currNote;
-    currNote = part->getNoteAt(i);
-    if (currNote->midi < MIDI_MIN) {
-      period = 0;
+    if (i < RESOLUTION * 12) {
+      startNote = millis();
+      delete currNote;
+      currNote = part->getNoteAt(i);
+      if (currNote->midi < MIDI_MIN) {
+        period = 0;
+        #ifdef __linux__
+          std::cout << "Midi value " << (int) currNote->midi << " (below min)" << std::endl;
+        #endif
+      } else if (currNote->midi > MIDI_MAX) {
+        period = periods[MIDI_MAX - MIDI_MIN - 1];
+        #ifdef __linux__
+          std::cout << "Midi value " << (int) currNote->midi << " (above max)" << std::endl;
+        #endif
+      } else {
+        period = periods[currNote->midi - MIDI_MIN];
+        #ifdef __linux__
+          std::cout << "Midi value " << (int) currNote->midi << std::endl;
+        #endif
+      }
+      high = true;
+      currNoteLen = 0;
+      for (char tick = 0; tick < currNote->len; ++tick) {
+        currNoteLen += 2 * NOTE_LENGTH * (((i + tick) % 2) ? 0.333 : 0.666);
+      }
       #ifdef __linux__
-        std::cout << "Midi value " << (int) currNote->midi << " (below min)" << std::endl;
-      #endif
-    } else if (currNote->midi > MIDI_MAX) {
-      period = periods[MIDI_MAX - MIDI_MIN - 1];
-      #ifdef __linux__
-        std::cout << "Midi value " << (int) currNote->midi << " (above max)" << std::endl;
-      #endif
-    } else {
-      period = periods[currNote->midi - MIDI_MIN];
-      #ifdef __linux__
-        std::cout << "Midi value " << (int) currNote->midi << std::endl;
+        // if (period != 0) {
+          std::cout << i << '\t' << (int) currNote->len << '\t' << currNoteLen << '\t' << millis() << std::endl;
+        // }
       #endif
     }
-    high = true;
-    currNoteLen = currNote->len * NOTE_LENGTH * ((i % 2) ? 0.333 : 0.666);
-    #ifdef __linux__
-      if (period != 0) {
-        std::cout << i << '\t' << period << '\t' << millis() << std::endl;
-      }
-    #endif
   } else {
     high = false;
   }
@@ -80,3 +95,29 @@ void Performer::step() {
 bool Performer::playing() {
   return currNote->midi != 0 && millis() - startNote < currNoteLen;
 }
+
+#ifdef __linux__
+  std::vector<sf::Int16> Performer::getSamples(unsigned int amp) {
+    std::vector<sf::Int16> samples;
+    for (bool s : this->samples) {
+      samples.push_back(s ? amp : -amp);
+    }
+
+    return samples;
+  }
+
+  void play(std::vector<sf::Int16> samples) {
+    sf::SoundBuffer Buffer;
+    
+    if (!Buffer.loadFromSamples(&samples[0], samples.size(), 1, SAMPLE_RATE)) {
+      std::cerr << "Loading failed!" << std::endl;
+      exit(1);
+    }
+
+    // sf::Sound Sound;
+    // Sound.setBuffer(Buffer);
+    // Sound.play();
+    // sf::sleep(sf::milliseconds(samples.size() * 1000 / SAMPLE_RATE));
+    Buffer.saveToFile("out.wav");
+  }
+#endif
