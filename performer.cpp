@@ -27,7 +27,7 @@ Performer::Performer(Part& part, char pin) {
   period = periods[currNote->midi - MIDI_MIN];
   high = false;
   lastPeak = 0;
-  currNoteLen = currNote->len * NOTE_LENGTH * ((i % 2) ? 0.333 : 0.666);
+  currNoteLen = 0;
   #ifdef __linux__
     lastSample = 0;
   #endif
@@ -79,7 +79,7 @@ void Performer::step() {
       high = true;
       currNoteLen = 0;
       for (char tick = 0; tick < currNote->len; ++tick) {
-        currNoteLen += NOTE_LENGTH * (((i + tick) % 2) ? 0.333 : 0.666);
+        currNoteLen += NOTE_LENGTH * (((i + tick) % (RESOLUTION / 4)) ? 0.333 : 0.666);
       }
       #ifdef __linux__
         // if (period != 0) {
