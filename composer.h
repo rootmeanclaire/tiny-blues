@@ -26,11 +26,13 @@ class Part {
 
 class Melody : public Part {
   private:
+    char key;
     Note motive[RESOLUTION];
     Note continuous[RESOLUTION];
     Note conclusive[RESOLUTION];
   public:
     Melody(char key);
+    void write();
     Note* getNoteAt(unsigned short tick);
 };
 

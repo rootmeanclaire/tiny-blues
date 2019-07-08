@@ -1,6 +1,15 @@
+#ifdef __linux__
+  #include <cstdlib>
+#else
+  #include <Arduino.h>
+#endif
 #include "composer.h"
 
 Melody::Melody(char key) {
+  this->key = key;
+}
+
+void Melody::write() {
   char dn = 0;
   
   for (char i = 0; i < RESOLUTION; ++i) {
@@ -10,7 +19,11 @@ Melody::Melody(char key) {
     } else {
       motive[i] = Note(key + dn, 1);
     }
-    dn += SCALE[i % LEN_SCALE];
+    #ifdef __linux__
+      dn += SCALE[(i + (rand() % 3) - 1 + LEN_SCALE) % LEN_SCALE];
+    #else
+      dn += SCALE[(i + random(-1, 2) + LEN_SCALE) % LEN_SCALE];
+    #endif
   }
   
   dn = 12;

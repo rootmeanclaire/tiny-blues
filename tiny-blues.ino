@@ -18,6 +18,7 @@ void setup() {
     periods[i] = round(500000.0 / getFreq(i + MIDI_MIN));
   }
   randomSeed(analogRead(3));
+  melody.write();
 }
 
 void loop() {
