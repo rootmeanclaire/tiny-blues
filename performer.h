@@ -28,9 +28,10 @@ class Performer {
     Performer(Part& part, char pin);
     ~Performer();
     void step();
-    bool playing();
+    bool playing() const;
+    bool done() const;
     #ifdef __linux__
-      std::vector<sf::Int16> getSamples(unsigned int amp);
+      std::vector<sf::Int16> getSamples(unsigned int amp) const;
     #endif
 };
 

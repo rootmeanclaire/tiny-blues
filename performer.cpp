@@ -56,7 +56,7 @@ void Performer::step() {
     }
   } else if (dNote > currNoteLen) {
     i++;
-    if (i < RESOLUTION * 12) {
+    if (!done()) {
       startNote = millis();
       delete currNote;
       currNote = part->getNoteAt(i);
@@ -79,7 +79,7 @@ void Performer::step() {
       high = true;
       currNoteLen = 0;
       for (char tick = 0; tick < currNote->len; ++tick) {
-        currNoteLen += 2 * NOTE_LENGTH * (((i + tick) % 2) ? 0.333 : 0.666);
+        currNoteLen += NOTE_LENGTH * (((i + tick) % 2) ? 0.333 : 0.666);
       }
       #ifdef __linux__
         // if (period != 0) {
@@ -92,12 +92,16 @@ void Performer::step() {
   }
 }
 
-bool Performer::playing() {
+bool Performer::playing() const {
   return currNote->midi != 0 && millis() - startNote < currNoteLen;
 }
 
+bool Performer::done() const {
+  return i >= RESOLUTION * 12;
+}
+
 #ifdef __linux__
-  std::vector<sf::Int16> Performer::getSamples(unsigned int amp) {
+  std::vector<sf::Int16> Performer::getSamples(unsigned int amp) const {
     std::vector<sf::Int16> samples;
     for (bool s : this->samples) {
       samples.push_back(s ? amp : -amp);
