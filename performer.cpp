@@ -98,7 +98,7 @@ bool Performer::playing() const {
 }
 
 bool Performer::done() const {
-  return iTick >= RESOLUTION * 12;
+  return iTick > RESOLUTION * 12;
 }
 
 #ifdef __linux__
