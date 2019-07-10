@@ -6,7 +6,7 @@
 
 #ifndef PERFORMER_H
 #define PERFORMER_H
-#define NOTE_LENGTH 750
+#define NOTE_LENGTH 500
 extern int periods[MIDI_MAX - MIDI_MIN];
 
 class Performer {

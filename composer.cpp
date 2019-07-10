@@ -30,6 +30,7 @@ void Melody::write() {
   }
   
   dn = 12;
+  ds = 0;
   for (char i = 0; i < 7; ++i) {
     if (i == 6) {
       conclusive[i] = Note(key + dn, RESOLUTION / 4);
@@ -40,14 +41,29 @@ void Melody::write() {
   }
 
   dn = 12;
+  ds = 0;
   for (char i = 0; i < 7; ++i) {
     if (i == 6) {
       continuous[i] = Note(key + dn, RESOLUTION / 4);
     } else {
-      continuous[i] = Note(random(0, 6) ? (key + dn) : 0, RESOLUTION / 8);
+      continuous[i] = Note(key + dn, RESOLUTION / 8);
     }
-    dn -= SCALE[i % LEN_SCALE];
+    if (random(4) == 0) {
+      dn += SCALE[(ds + LEN_SCALE) % LEN_SCALE];
+      ds++;
+    } else {
+      dn -= SCALE[(ds - 1 + LEN_SCALE) % LEN_SCALE];
+      ds--;
+    }
   }
+  // for (char i = 0; i < 7; ++i) {
+  //   if (i == 6) {
+  //     continuous[i] = Note(key + dn, RESOLUTION / 4);
+  //   } else {
+  //     continuous[i] = Note(random(0, 6) ? (key + dn) : 0, RESOLUTION / 8);
+  //   }
+  //   dn -= SCALE[i % LEN_SCALE];
+  // }
 }
 
 Note* Melody::getNoteAt(unsigned short tick) {
@@ -90,7 +106,10 @@ Bassline::Bassline(char key) {
   this->key = key;
   rhythm[0] = Note(1, RESOLUTION / 8);
   rhythm[1] = Note(1, RESOLUTION / 8);
-  rhythm[2] = Note(0, 3 * RESOLUTION / 4);
+  rhythm[2] = Note(0, 3 * RESOLUTION / 8);
+  rhythm[3] = Note(1, RESOLUTION / 8);
+  rhythm[4] = Note(1, RESOLUTION / 8);
+  rhythm[5] = Note(1, RESOLUTION / 8);
 }
 
 Note* Bassline::getNoteAt(unsigned short tick) {
