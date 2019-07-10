@@ -44,4 +44,10 @@ class Bassline : public Part {
     Bassline(char key);
     Note* getNoteAt(unsigned short tick);
 };
+
+#ifdef __linux__
+  long random(long min, long max);
+  long random(long max);
+#endif
+
 #endif

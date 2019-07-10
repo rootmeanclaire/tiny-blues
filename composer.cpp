@@ -12,10 +12,21 @@ Melody::Melody(char key) {
 
 void Melody::write() {
   char dn = 0;
-  
+  char ds = 0;
+
   for (char i = 0; i < 7; ++i) {
-    motive[i] = Note(key + dn, RESOLUTION / ((i == 6) ? 4 : 8));
-    dn += SCALE[i % LEN_SCALE];
+    if (i == 6) {
+      motive[i] = Note(key + dn, RESOLUTION / 4);
+    } else {
+      motive[i] = Note(key + dn, RESOLUTION / 8);
+    }
+    if (random(4)) {
+      dn += SCALE[(ds + LEN_SCALE) % LEN_SCALE];
+      ds++;
+    } else {
+      dn -= SCALE[(ds - 1 + LEN_SCALE) % LEN_SCALE];
+      ds--;
+    }
   }
   
   dn = 12;
@@ -23,7 +34,7 @@ void Melody::write() {
     if (i == 6) {
       conclusive[i] = Note(key + dn, RESOLUTION / 4);
     } else {
-      conclusive[i] = Note(key + dn, RESOLUTION / 8);
+      conclusive[i] = Note(random(0, 6) ? (key + dn) : 0, RESOLUTION / 8);
     }
     dn -= SCALE[i % LEN_SCALE];
   }
@@ -33,7 +44,7 @@ void Melody::write() {
     if (i == 6) {
       continuous[i] = Note(key + dn, RESOLUTION / 4);
     } else {
-      continuous[i] = Note(key + dn, RESOLUTION / 8);
+      continuous[i] = Note(random(0, 6) ? (key + dn) : 0, RESOLUTION / 8);
     }
     dn -= SCALE[i % LEN_SCALE];
   }
@@ -104,3 +115,12 @@ Note* Bassline::getNoteAt(unsigned short tick) {
     return new Note(BASSLINE[measureNum] + key, rhythm[noteInMeasure].len);
   }
 }
+
+#ifdef __linux__
+  long random(long min, long max) {
+    return rand() % (max - min) + min;
+  }
+  long random(long max) {
+    return rand() % max;
+  }
+#endif
