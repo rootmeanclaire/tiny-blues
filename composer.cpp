@@ -1,5 +1,6 @@
 #ifdef __linux__
   #include <cstdlib>
+  #include <iostream>
 #else
   #include <Arduino.h>
 #endif
@@ -12,42 +13,30 @@ Melody::Melody(char key) {
 void Melody::write() {
   char dn = 0;
   
-  for (char i = 0; i < RESOLUTION; ++i) {
-    if (i == RESOLUTION - 2) {
-      motive[i] = Note(key + dn, 2);
-      break;
-    } else {
-      motive[i] = Note(key + dn, 1);
-    }
-    #ifdef __linux__
-      dn += SCALE[(i + (rand() % 3) - 1 + LEN_SCALE) % LEN_SCALE];
-    #else
-      dn += SCALE[(i + random(-1, 2) + LEN_SCALE) % LEN_SCALE];
-    #endif
+  for (char i = 0; i < 7; ++i) {
+    motive[i] = Note(key + dn, RESOLUTION / ((i == 6) ? 4 : 8));
+    dn += SCALE[i % LEN_SCALE];
   }
   
   dn = 12;
-  for (char i = 0; i < RESOLUTION; ++i) {
-    if (i == RESOLUTION - 2) {
-      conclusive[i] = Note(key + dn, 2);
-      break;
+  for (char i = 0; i < 7; ++i) {
+    if (i == 6) {
+      conclusive[i] = Note(key + dn, RESOLUTION / 4);
     } else {
-      conclusive[i] = Note(key + dn, 1);
+      conclusive[i] = Note(key + dn, RESOLUTION / 8);
     }
     dn -= SCALE[i % LEN_SCALE];
   }
 
   dn = 12;
-  for (char i = 0; i < RESOLUTION; ++i) {
-    if (i == RESOLUTION - 2) {
-      continuous[i] = Note(key + dn, 2);
-      break;
+  for (char i = 0; i < 7; ++i) {
+    if (i == 6) {
+      continuous[i] = Note(key + dn, RESOLUTION / 4);
     } else {
-      continuous[i] = Note(key + dn, 1);
+      continuous[i] = Note(key + dn, RESOLUTION / 8);
     }
     dn -= SCALE[i % LEN_SCALE];
   }
-
 }
 
 Note* Melody::getNoteAt(unsigned short tick) {
@@ -64,7 +53,6 @@ Note* Melody::getNoteAt(unsigned short tick) {
 
   char tickInMeasure = tick % RESOLUTION;
   char noteInMeasure = 0;
-  char pitch;
   
   for (char i = 0; i < tickInMeasure;) {
     char dur = measure[noteInMeasure].len;
@@ -76,15 +64,22 @@ Note* Melody::getNoteAt(unsigned short tick) {
     }
   }
   
+  std::cout << "=========" << std::endl;
+  std::cout << "Tick: " << tick << std::endl;
+  std::cout << "Measure: " << measureNum << std::endl;
+  std::cout << "Tick in Measure: " << (int) tickInMeasure << std::endl;
+  std::cout << "Note in Measure: " << (int) noteInMeasure << std::endl;
+  std::cout << "Pitch: " << (int) measure[noteInMeasure].midi << std::endl;
+  std::cout << "Length: " << (int) measure[noteInMeasure].len << std::endl;
+  std::cout << "=========" << std::endl;
   return new Note(measure[noteInMeasure].midi, measure[noteInMeasure].len);
 }
 
 Bassline::Bassline(char key) {
   this->key = key;
-  for (char i = 0; i < RESOLUTION / 4; ++i) {
-    rhythm[i] = Note(1, 1);
-  }
-  rhythm[RESOLUTION / 4] = Note(0, 3 * RESOLUTION / 4);
+  rhythm[0] = Note(1, RESOLUTION / 8);
+  rhythm[1] = Note(1, RESOLUTION / 8);
+  rhythm[2] = Note(0, 3 * RESOLUTION / 4);
 }
 
 Note* Bassline::getNoteAt(unsigned short tick) {

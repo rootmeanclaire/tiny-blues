@@ -24,11 +24,13 @@ void setup() {
 void loop() {
   long startSong = millis();
   
-  while (millis() - startSong < NOTE_LENGTH / 2 * RESOLUTION * 12 || (!playMelody.done() && !playBass.done())) {
-    playBass.step();
-//    if (!playBass.playing()) {
+  while (!(playMelody.done() && playBass.done())) {
+    if (!playBass.done()) {
+      playBass.step();
+    }
+    if (!playMelody.done()) {
       playMelody.step();
-//    }
+    }
   }
 }
 

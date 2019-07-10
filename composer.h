@@ -3,7 +3,7 @@
 
 #define MIDI_MIN 36
 #define MIDI_MAX 96
-#define RESOLUTION 8
+#define RESOLUTION 16
 #define LEN_SCALE 6
 const char SCALE[] = {3, 2, 1, 1, 3, 2};
 const char BASSLINE[] = {

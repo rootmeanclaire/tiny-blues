@@ -21,9 +21,9 @@
 Performer::Performer(Part& part, char pin) {
   this->part = &part;
   this->pin = pin;
-  i = -1;
+  iTick = 0;
   startNote = 0;
-  currNote = this->part->getNoteAt(i);
+  currNote = new Note();
   period = periods[currNote->midi - MIDI_MIN];
   high = false;
   lastPeak = 0;
@@ -55,11 +55,10 @@ void Performer::step() {
       lastPeak = micros();
     }
   } else if (dNote > currNoteLen) {
-    i++;
     if (!done()) {
       startNote = millis();
       delete currNote;
-      currNote = part->getNoteAt(i);
+      currNote = part->getNoteAt(iTick);
       if (currNote->midi < MIDI_MIN) {
         period = 0;
         #ifdef __linux__
@@ -79,11 +78,13 @@ void Performer::step() {
       high = true;
       currNoteLen = 0;
       for (char tick = 0; tick < currNote->len; ++tick) {
-        currNoteLen += NOTE_LENGTH * (((i + tick) % (RESOLUTION / 4)) ? 0.333 : 0.666);
+        bool swingLong = ((iTick + tick) / (RESOLUTION / 8)) % 2;
+        currNoteLen += (8.0 / RESOLUTION) * NOTE_LENGTH * (swingLong ? 0.333 : 0.666);
       }
+      iTick += currNote->len;
       #ifdef __linux__
         // if (period != 0) {
-          std::cout << i << '\t' << (int) currNote->len << '\t' << currNoteLen << '\t' << millis() << std::endl;
+          std::cout << iTick << '\t' << (int) currNote->len << '\t' << currNoteLen << '\t' << millis() << std::endl;
         // }
       #endif
     }
@@ -97,7 +98,7 @@ bool Performer::playing() const {
 }
 
 bool Performer::done() const {
-  return i >= RESOLUTION * 12;
+  return iTick >= RESOLUTION * 12;
 }
 
 #ifdef __linux__

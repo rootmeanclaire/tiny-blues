@@ -6,14 +6,14 @@
 
 #ifndef PERFORMER_H
 #define PERFORMER_H
-#define NOTE_LENGTH 500
+#define NOTE_LENGTH 750
 extern int periods[MIDI_MAX - MIDI_MIN];
 
 class Performer {
   private:
     Part* part;
     char pin;
-    short i;
+    short iTick;
     long startNote;
     Note* currNote;
     int period;
