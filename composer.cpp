@@ -90,15 +90,17 @@ Note* Melody::getNoteAt(unsigned short tick) {
       i += dur;
     }
   }
-  
-  std::cout << "=========" << std::endl;
-  std::cout << "Tick: " << tick << std::endl;
-  std::cout << "Measure: " << measureNum << std::endl;
-  std::cout << "Tick in Measure: " << (int) tickInMeasure << std::endl;
-  std::cout << "Note in Measure: " << (int) noteInMeasure << std::endl;
-  std::cout << "Pitch: " << (int) measure[noteInMeasure].midi << std::endl;
-  std::cout << "Length: " << (int) measure[noteInMeasure].len << std::endl;
-  std::cout << "=========" << std::endl;
+
+  #ifdef __linux__
+    std::cout << "=========" << std::endl;
+    std::cout << "Tick: " << tick << std::endl;
+    std::cout << "Measure: " << measureNum << std::endl;
+    std::cout << "Tick in Measure: " << (int) tickInMeasure << std::endl;
+    std::cout << "Note in Measure: " << (int) noteInMeasure << std::endl;
+    std::cout << "Pitch: " << (int) measure[noteInMeasure].midi << std::endl;
+    std::cout << "Length: " << (int) measure[noteInMeasure].len << std::endl;
+    std::cout << "=========" << std::endl;
+  #endif
   return new Note(measure[noteInMeasure].midi, measure[noteInMeasure].len);
 }
 

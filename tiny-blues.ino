@@ -14,6 +14,8 @@ int periods[MIDI_MAX - MIDI_MIN];
 void setup() {
   pinMode(PIN_MELODY, OUTPUT);
   pinMode(PIN_BASS, OUTPUT);
+  pinMode(3, INPUT);
+  
   for (int i = 0; i < MIDI_MAX - MIDI_MIN; ++i) {
     periods[i] = round(500000.0 / getFreq(i + MIDI_MIN));
   }
@@ -22,8 +24,7 @@ void setup() {
 }
 
 void loop() {
-  long startSong = millis();
-  
+  digitalWrite(4, HIGH);
   while (!(playMelody.done() && playBass.done())) {
     if (!playBass.done()) {
       playBass.step();
@@ -32,6 +33,8 @@ void loop() {
       playMelody.step();
     }
   }
+
+  delay(1000);
 }
 
 double getFreq(int midiNum) {

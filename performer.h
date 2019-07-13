@@ -6,7 +6,8 @@
 
 #ifndef PERFORMER_H
 #define PERFORMER_H
-#define NOTE_LENGTH 500
+#define TEMPO 120
+#define NOTE_LENGTH ((60 * 1000) / TEMPO)
 extern int periods[MIDI_MAX - MIDI_MIN];
 
 class Performer {
@@ -14,11 +15,11 @@ class Performer {
     Part* part;
     char pin;
     short iTick;
-    long startNote;
+    unsigned long startNote;
     Note* currNote;
     int period;
     bool high;
-    long lastPeak;
+    unsigned long lastPeak;
     int currNoteLen;
     #ifdef __linux__
       long lastSample;
