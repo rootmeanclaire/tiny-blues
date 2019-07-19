@@ -8,19 +8,20 @@
 #define PERFORMER_H
 #define TEMPO 120
 #define NOTE_LENGTH ((60 * 1000) / TEMPO)
-extern int periods[MIDI_MAX - MIDI_MIN];
+extern unsigned short periods[MIDI_MAX - MIDI_MIN];
+extern bool led;
 
 class Performer {
   private:
     Part* part;
     char pin;
-    short iTick;
+    unsigned short iTick;
     unsigned long startNote;
     Note* currNote;
-    int period;
+    unsigned short period;
     bool high;
     unsigned long lastPeak;
-    int currNoteLen;
+    unsigned short currNoteLen;
     #ifdef __linux__
       long lastSample;
       std::vector<sf::Int16> samples;

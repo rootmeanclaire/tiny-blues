@@ -38,7 +38,7 @@ Performer::~Performer() {
 }
 
 void Performer::step() {
-  int dNote = millis() - startNote;
+  unsigned short dNote = millis() - startNote;
   
   #ifdef __linux__
     if (micros() - lastSample > 1000000 / SAMPLE_RATE) {
@@ -87,6 +87,12 @@ void Performer::step() {
           std::cout << iTick << '\t' << (int) currNote->len << '\t' << currNoteLen << '\t' << millis() << std::endl;
         // }
       #endif
+//      if (pin == 0) {
+//        if (currNote->len == 0) {
+//          led = !led;
+//          digitalWrite(4, led ? HIGH : LOW);
+//        }
+//      }
     }
   } else {
     high = false;

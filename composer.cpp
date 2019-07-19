@@ -115,7 +115,7 @@ Bassline::Bassline(char key) {
 }
 
 Note* Bassline::getNoteAt(unsigned short tick) {
-  unsigned short measureNum = tick / RESOLUTION;
+  unsigned char measureNum = tick / RESOLUTION;
 
   char tickInMeasure = tick % RESOLUTION;
   char noteInMeasure = 0;

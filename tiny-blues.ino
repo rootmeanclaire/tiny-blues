@@ -9,14 +9,16 @@ Melody melody(60);
 Bassline bassline(60 - 12);
 Performer playMelody(melody, PIN_MELODY);
 Performer playBass(bassline, PIN_BASS);
-int periods[MIDI_MAX - MIDI_MIN];
+unsigned short periods[MIDI_MAX - MIDI_MIN];
+bool led = false;
 
 void setup() {
   pinMode(PIN_MELODY, OUTPUT);
   pinMode(PIN_BASS, OUTPUT);
   pinMode(3, INPUT);
+  pinMode(4, OUTPUT);
   
-  for (int i = 0; i < MIDI_MAX - MIDI_MIN; ++i) {
+  for (unsigned char i = 0; i < MIDI_MAX - MIDI_MIN; ++i) {
     periods[i] = round(500000.0 / getFreq(i + MIDI_MIN));
   }
   randomSeed(analogRead(3));
@@ -24,7 +26,6 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(4, HIGH);
   while (!(playMelody.done() && playBass.done())) {
     if (!playBass.done()) {
       playBass.step();
@@ -33,10 +34,10 @@ void loop() {
       playMelody.step();
     }
   }
-
+  
   delay(1000);
 }
 
-double getFreq(int midiNum) {
+double getFreq(unsigned char midiNum) {
   return 440 * pow(2, (midiNum - MIDI_A4) / 12.0);
 }
