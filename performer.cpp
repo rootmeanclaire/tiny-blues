@@ -59,16 +59,10 @@ void Performer::step() {
       startNote = millis();
       delete currNote;
       currNote = part->getNoteAt(iTick);
-      if (currNote->midi < 0) {
+      if (currNote->midi == REST) {
         period = 0;
-        #ifdef __linux__
-          std::cout << "Midi value " << (int) currNote->midi << " (below min)" << std::endl;
-        #endif
       } else {
         period = periods[currNote->midi % 6] << (currNote->midi / 6);
-        #ifdef __linux__
-          std::cout << "Midi value " << (int) currNote->midi << std::endl;
-        #endif
       }
       high = true;
       currNoteLen = 0;
@@ -78,9 +72,7 @@ void Performer::step() {
       }
       iTick += currNote->len;
       #ifdef __linux__
-        // if (period != 0) {
-          std::cout << iTick << '\t' << (int) currNote->len << '\t' << currNoteLen << '\t' << millis() << std::endl;
-        // }
+        std::cout << iTick << '\t' << (int) currNote->len << '\t' << currNoteLen << '\t' << millis() << std::endl;
       #endif
     }
   } else {

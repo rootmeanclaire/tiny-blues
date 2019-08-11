@@ -122,7 +122,7 @@ Note* Bassline::getNoteAt(unsigned short tick) {
     }
   }
 
-  if (rhythm[noteInMeasure].midi == 0) {
+  if (rhythm[noteInMeasure].midi == REST) {
     return new Note(REST, rhythm[noteInMeasure].len);
   } else {
     return new Note(BASSLINE[measureNum] + octave * 6, rhythm[noteInMeasure].len);
