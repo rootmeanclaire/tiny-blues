@@ -15,9 +15,9 @@ void Melody::write() {
 
   for (char i = 0; i < 7; ++i) {
     if (i == 6) {
-      motive[i] = Note(octave * 6 + ds, RESOLUTION / 4);
+      motive[i] = Note(ds + octave * 6, RESOLUTION / 4);
     } else {
-      motive[i] = Note(octave * 6 + ds, RESOLUTION / 8);
+      motive[i] = Note(ds + octave * 6, RESOLUTION / 8);
     }
     if (random(4)) {
       ds++;
@@ -26,21 +26,21 @@ void Melody::write() {
     }
   }
   
-  ds = 0;
+  ds = 6;
   for (char i = 0; i < 7; ++i) {
     if (i == 6) {
-      conclusive[i] = Note(octave * 6 - ds, RESOLUTION / 4);
+      conclusive[i] = Note(-i + (octave + 1) * 6, RESOLUTION / 4);
     } else {
-      conclusive[i] = Note(random(0, 6) ? (octave * 6 - ds) : REST, RESOLUTION / 8);
+      conclusive[i] = Note(random(0, 6) ? (-i + (octave + 1) * 6) : REST, RESOLUTION / 8);
     }
   }
 
-  ds = 0;
+  ds = 6;
   for (char i = 0; i < 7; ++i) {
     if (i == 6) {
-      continuous[i] = Note(octave * 6 + ds, RESOLUTION / 4);
+      continuous[i] = Note(ds + octave * 6, RESOLUTION / 4);
     } else {
-      continuous[i] = Note(octave * 6 + ds, RESOLUTION / 8);
+      continuous[i] = Note(ds + octave * 6, RESOLUTION / 8);
     }
     if (random(4) == 0) {
       ds++;
@@ -48,14 +48,6 @@ void Melody::write() {
       ds--;
     }
   }
-  // for (char i = 0; i < 7; ++i) {
-  //   if (i == 6) {
-  //     continuous[i] = Note(key + dn, RESOLUTION / 4);
-  //   } else {
-  //     continuous[i] = Note(random(0, 6) ? (key + dn) : 0, RESOLUTION / 8);
-  //   }
-  //   dn -= SCALE[i % LEN_SCALE];
-  // }
 }
 
 Note* Melody::getNoteAt(unsigned short tick) {

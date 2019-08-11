@@ -15,11 +15,11 @@ class Performer {
     Part* part;
     char pin;
     unsigned short iTick;
-    unsigned long startNote;
+    unsigned int startNote;
     Note* currNote;
     unsigned short period;
     bool high;
-    unsigned long lastPeak;
+    unsigned int lastPeak;
     unsigned short currNoteLen;
     #ifdef __linux__
       long lastSample;

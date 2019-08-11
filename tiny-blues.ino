@@ -2,12 +2,12 @@
 #include "performer.h"
 
 #define MIDI_A4 69
-#define MIDI_KEY 69
+#define MIDI_KEY (69 + 12)
 #define PIN_MELODY 1
 #define PIN_BASS 0
 
-Melody melody(1);
-Bassline bassline(2);
+Melody melody(4);
+Bassline bassline(3);
 Performer playMelody(melody, PIN_MELODY);
 Performer playBass(bassline, PIN_BASS);
 unsigned char SCALE[] = {0, 3, 5, 6, 7, 10};

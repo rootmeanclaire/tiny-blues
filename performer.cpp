@@ -62,7 +62,7 @@ void Performer::step() {
       if (currNote->midi == REST) {
         period = 0;
       } else {
-        period = periods[currNote->midi % 6] << (currNote->midi / 6);
+        period = periods[currNote->midi % 6] << (5 - currNote->midi / 6);
       }
       high = true;
       currNoteLen = 0;

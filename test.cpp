@@ -12,7 +12,7 @@
 #define PIN_MELODY 1
 #define PIN_BASS 0
 
-Melody melody(1);
+Melody melody(4);
 Bassline bassline(3);
 Performer playMelody(melody, PIN_MELODY);
 Performer playBass(bassline, PIN_BASS);
