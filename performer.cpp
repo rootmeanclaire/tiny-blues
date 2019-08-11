@@ -24,7 +24,7 @@ Performer::Performer(Part& part, char pin) {
   iTick = 0;
   startNote = 0;
   currNote = new Note();
-  period = periods[currNote->midi - MIDI_MIN];
+  period = periods[currNote->midi % 6] << (currNote->midi / 6);
   high = false;
   lastPeak = 0;
   currNoteLen = 0;
@@ -46,7 +46,7 @@ void Performer::step() {
       lastSample = micros();
     }
   #endif
-  if (currNote->midi != 0 && dNote < currNoteLen * 0.9) {
+  if (currNote->midi != REST && dNote < currNoteLen * 0.9) {
     if (micros() - lastPeak > period) {
       #ifndef __linux__
         digitalWrite(pin, high ? LOW : HIGH);
@@ -59,18 +59,13 @@ void Performer::step() {
       startNote = millis();
       delete currNote;
       currNote = part->getNoteAt(iTick);
-      if (currNote->midi < MIDI_MIN) {
+      if (currNote->midi < 0) {
         period = 0;
         #ifdef __linux__
           std::cout << "Midi value " << (int) currNote->midi << " (below min)" << std::endl;
         #endif
-      } else if (currNote->midi > MIDI_MAX) {
-        period = periods[MIDI_MAX - MIDI_MIN - 1];
-        #ifdef __linux__
-          std::cout << "Midi value " << (int) currNote->midi << " (above max)" << std::endl;
-        #endif
       } else {
-        period = periods[currNote->midi - MIDI_MIN];
+        period = periods[currNote->midi % 6] << (currNote->midi / 6);
         #ifdef __linux__
           std::cout << "Midi value " << (int) currNote->midi << std::endl;
         #endif
@@ -87,12 +82,6 @@ void Performer::step() {
           std::cout << iTick << '\t' << (int) currNote->len << '\t' << currNoteLen << '\t' << millis() << std::endl;
         // }
       #endif
-//      if (pin == 0) {
-//        if (currNote->len == 0) {
-//          led = !led;
-//          digitalWrite(4, led ? HIGH : LOW);
-//        }
-//      }
     }
   } else {
     high = false;
@@ -100,7 +89,7 @@ void Performer::step() {
 }
 
 bool Performer::playing() const {
-  return currNote->midi != 0 && millis() - startNote < currNoteLen;
+  return currNote->midi != REST && millis() - startNote < currNoteLen;
 }
 
 bool Performer::done() const {

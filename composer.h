@@ -1,15 +1,13 @@
 #ifndef COMPOSER_H
 #define COMPOSER_H
 
-#define MIDI_MIN 40
-#define MIDI_MAX 90
 #define RESOLUTION 8
 #define LEN_SCALE 6
-const char SCALE[] = {3, 2, 1, 1, 3, 2};
+#define REST 127
 const char BASSLINE[] = {
   0, 0, 0, 0,
-  5, 5, 0, 0,
-  7, 5, 0, 0
+  2, 2, 0, 0,
+  4, 2, 0, 0
 };
 
 struct Note {
@@ -26,22 +24,22 @@ class Part {
 
 class Melody : public Part {
   private:
-    char key;
+    char octave;
     Note motive[RESOLUTION];
     Note continuous[RESOLUTION];
     Note conclusive[RESOLUTION];
   public:
-    Melody(char key);
+    Melody(char octave);
     void write();
     Note* getNoteAt(unsigned short tick);
 };
 
 class Bassline : public Part {
   private:
-    char key;
+    char octave;
     Note rhythm[RESOLUTION];
   public:
-    Bassline(char key);
+    Bassline(char octave);
     Note* getNoteAt(unsigned short tick);
 };
 

@@ -2,15 +2,16 @@
 #include "performer.h"
 
 #define MIDI_A4 69
+#define MIDI_KEY 69
 #define PIN_MELODY 1
 #define PIN_BASS 0
 
-Melody melody(60);
-Bassline bassline(60 - 12);
+Melody melody(1);
+Bassline bassline(2);
 Performer playMelody(melody, PIN_MELODY);
 Performer playBass(bassline, PIN_BASS);
-unsigned short periods[MIDI_MAX - MIDI_MIN];
-bool led = false;
+unsigned char SCALE[] = {0, 3, 5, 6, 7, 10};
+unsigned short periods[6];
 
 void setup() {
   pinMode(PIN_MELODY, OUTPUT);
@@ -18,8 +19,8 @@ void setup() {
   pinMode(3, INPUT);
   pinMode(4, OUTPUT);
   
-  for (unsigned char i = 0; i < MIDI_MAX - MIDI_MIN; ++i) {
-    periods[i] = round(500000.0 / getFreq(i + MIDI_MIN));
+  for (unsigned char i = 0; i < 6; ++i) {
+    periods[i] = round(1000000.0 / getFreq(SCALE[i] + MIDI_KEY));
   }
   randomSeed(analogRead(3));
   melody.write();

@@ -6,53 +6,45 @@
 #endif
 #include "composer.h"
 
-Melody::Melody(char key) {
-  this->key = key;
+Melody::Melody(char octave) {
+  this->octave = octave;
 }
 
 void Melody::write() {
-  char dn = 0;
   char ds = 0;
 
   for (char i = 0; i < 7; ++i) {
     if (i == 6) {
-      motive[i] = Note(key + dn, RESOLUTION / 4);
+      motive[i] = Note(octave * 6 + ds, RESOLUTION / 4);
     } else {
-      motive[i] = Note(key + dn, RESOLUTION / 8);
+      motive[i] = Note(octave * 6 + ds, RESOLUTION / 8);
     }
     if (random(4)) {
-      dn += SCALE[(ds + LEN_SCALE) % LEN_SCALE];
       ds++;
     } else {
-      dn -= SCALE[(ds - 1 + LEN_SCALE) % LEN_SCALE];
       ds--;
     }
   }
   
-  dn = 12;
   ds = 0;
   for (char i = 0; i < 7; ++i) {
     if (i == 6) {
-      conclusive[i] = Note(key + dn, RESOLUTION / 4);
+      conclusive[i] = Note(octave * 6 - ds, RESOLUTION / 4);
     } else {
-      conclusive[i] = Note(random(0, 6) ? (key + dn) : 0, RESOLUTION / 8);
+      conclusive[i] = Note(random(0, 6) ? (octave * 6 - ds) : REST, RESOLUTION / 8);
     }
-    dn -= SCALE[i % LEN_SCALE];
   }
 
-  dn = 12;
   ds = 0;
   for (char i = 0; i < 7; ++i) {
     if (i == 6) {
-      continuous[i] = Note(key + dn, RESOLUTION / 4);
+      continuous[i] = Note(octave * 6 + ds, RESOLUTION / 4);
     } else {
-      continuous[i] = Note(key + dn, RESOLUTION / 8);
+      continuous[i] = Note(octave * 6 + ds, RESOLUTION / 8);
     }
     if (random(4) == 0) {
-      dn += SCALE[(ds + LEN_SCALE) % LEN_SCALE];
       ds++;
     } else {
-      dn -= SCALE[(ds - 1 + LEN_SCALE) % LEN_SCALE];
       ds--;
     }
   }
@@ -104,11 +96,11 @@ Note* Melody::getNoteAt(unsigned short tick) {
   return new Note(measure[noteInMeasure].midi, measure[noteInMeasure].len);
 }
 
-Bassline::Bassline(char key) {
-  this->key = key;
+Bassline::Bassline(char octave) {
+  this->octave = octave;
   rhythm[0] = Note(1, RESOLUTION / 8);
   rhythm[1] = Note(1, RESOLUTION / 8);
-  rhythm[2] = Note(0, 3 * RESOLUTION / 8);
+  rhythm[2] = Note(REST, 3 * RESOLUTION / 8);
   rhythm[3] = Note(1, RESOLUTION / 8);
   rhythm[4] = Note(1, RESOLUTION / 8);
   rhythm[5] = Note(1, RESOLUTION / 8);
@@ -131,9 +123,9 @@ Note* Bassline::getNoteAt(unsigned short tick) {
   }
 
   if (rhythm[noteInMeasure].midi == 0) {
-    return new Note(0, rhythm[noteInMeasure].len);
+    return new Note(REST, rhythm[noteInMeasure].len);
   } else {
-    return new Note(BASSLINE[measureNum] + key, rhythm[noteInMeasure].len);
+    return new Note(BASSLINE[measureNum] + octave * 6, rhythm[noteInMeasure].len);
   }
 }
 

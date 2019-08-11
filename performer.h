@@ -8,8 +8,7 @@
 #define PERFORMER_H
 #define TEMPO 120
 #define NOTE_LENGTH ((60 * 1000) / TEMPO)
-extern unsigned short periods[MIDI_MAX - MIDI_MIN];
-extern bool led;
+extern unsigned short periods[6];
 
 class Performer {
   private:
