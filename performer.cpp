@@ -21,16 +21,7 @@
 Performer::Performer(Part& part, char pin) {
   this->part = &part;
   this->pin = pin;
-  iTick = 0;
-  startNote = 0;
-  currNote = new Note();
-  period = periods[currNote->midi % 6] << (currNote->midi / 6);
-  high = false;
-  lastPeak = 0;
-  currNoteLen = 0;
-  #ifdef __linux__
-    lastSample = 0;
-  #endif
+  reset();
 }
 
 Performer::~Performer() {
@@ -78,6 +69,19 @@ void Performer::step() {
   } else {
     high = false;
   }
+}
+
+void Performer::reset() {
+  iTick = 0;
+  startNote = 0;
+  currNote = new Note();
+  period = periods[currNote->midi % 6] << (5 - currNote->midi / 6);
+  high = false;
+  lastPeak = 0;
+  currNoteLen = 0;
+  #ifdef __linux__
+    lastSample = 0;
+  #endif
 }
 
 bool Performer::playing() const {

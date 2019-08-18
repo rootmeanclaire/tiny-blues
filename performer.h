@@ -6,8 +6,9 @@
 
 #ifndef PERFORMER_H
 #define PERFORMER_H
-#define TEMPO 120
-#define NOTE_LENGTH ((60 * 1000) / TEMPO)
+#define NOTE_LENGTH 500
+//#define TEMPO 120
+//#define NOTE_LENGTH ((60 * 1000) / TEMPO)
 extern unsigned short periods[6];
 
 class Performer {
@@ -29,6 +30,7 @@ class Performer {
     Performer(Part& part, char pin);
     ~Performer();
     void step();
+    void reset();
     bool playing() const;
     bool done() const;
     #ifdef __linux__

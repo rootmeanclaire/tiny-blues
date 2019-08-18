@@ -1,10 +1,12 @@
+//#include <MemoryFree.h>
 #include "composer.h"
 #include "performer.h"
 
 #define MIDI_A4 69
 #define MIDI_KEY (69 + 12)
-#define PIN_MELODY 1
-#define PIN_BASS 0
+#define PIN_MELODY 5
+#define PIN_BASS 6
+#define PIN_SEED 3
 
 Melody melody(4);
 Bassline bassline(3);
@@ -14,15 +16,16 @@ unsigned char SCALE[] = {0, 3, 5, 6, 7, 10};
 unsigned short periods[6];
 
 void setup() {
+  Serial.begin(9600);
   pinMode(PIN_MELODY, OUTPUT);
   pinMode(PIN_BASS, OUTPUT);
-  pinMode(3, INPUT);
-  pinMode(4, OUTPUT);
+  pinMode(PIN_SEED, INPUT);
   
   for (unsigned char i = 0; i < 6; ++i) {
-    periods[i] = round(1000000.0 / getFreq(SCALE[i] + MIDI_KEY));
+    periods[i] = round(1000000 / getFreq(SCALE[i] + MIDI_KEY));
   }
-  randomSeed(analogRead(3));
+  randomSeed(analogRead(PIN_SEED));
+
   melody.write();
 }
 
@@ -37,6 +40,8 @@ void loop() {
   }
   
   delay(1000);
+  playMelody.reset();
+  playBass.reset();
 }
 
 double getFreq(unsigned char midiNum) {
