@@ -16,7 +16,6 @@ unsigned char SCALE[] = {0, 3, 5, 6, 7, 10};
 unsigned short periods[LEN_SCALE];
 
 void setup() {
-  Serial.begin(9600);
   pinMode(PIN_MELODY, OUTPUT);
   pinMode(PIN_BASS, OUTPUT);
   pinMode(PIN_SEED, INPUT);
