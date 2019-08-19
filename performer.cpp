@@ -38,7 +38,7 @@ void Performer::step() {
     }
   #endif
   if (currNote->midi != REST && dNote < currNoteLen * 0.9) {
-    if (micros() - lastPeak > period) {
+    if (micros() - lastPeak > (unsigned long) period) {
       #ifndef __linux__
         digitalWrite(pin, high ? LOW : HIGH);
       #endif

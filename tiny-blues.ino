@@ -3,7 +3,7 @@
 #include "performer.h"
 
 #define MIDI_A4 69
-#define MIDI_KEY (69 + 12)
+#define MIDI_KEY (69 + 24)
 #define PIN_MELODY 5
 #define PIN_BASS 6
 #define PIN_SEED 3
