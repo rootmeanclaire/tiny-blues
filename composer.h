@@ -13,7 +13,7 @@ const char BASSLINE[] = {
 struct Note {
   char midi;
   char len;
-  Note() : midi(0), len(0) {};
+  Note() : midi(REST), len(0) {};
   Note(char midiPitch, char duration) : midi(midiPitch), len(duration) {};
 };
 
