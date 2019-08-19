@@ -9,7 +9,7 @@
 #define NOTE_LENGTH 500
 //#define TEMPO 120
 //#define NOTE_LENGTH ((60 * 1000) / TEMPO)
-extern unsigned short periods[6];
+extern unsigned short periods[LEN_SCALE];
 
 class Performer {
   private:

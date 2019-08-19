@@ -13,7 +13,7 @@ Bassline bassline(3);
 Performer playMelody(melody, PIN_MELODY);
 Performer playBass(bassline, PIN_BASS);
 unsigned char SCALE[] = {0, 3, 5, 6, 7, 10};
-unsigned short periods[6];
+unsigned short periods[LEN_SCALE];
 
 void setup() {
   Serial.begin(9600);
@@ -21,7 +21,7 @@ void setup() {
   pinMode(PIN_BASS, OUTPUT);
   pinMode(PIN_SEED, INPUT);
   
-  for (unsigned char i = 0; i < 6; ++i) {
+  for (unsigned char i = 0; i < LEN_SCALE; ++i) {
     periods[i] = round(1000000 / getFreq(SCALE[i] + MIDI_KEY));
   }
   randomSeed(analogRead(PIN_SEED));

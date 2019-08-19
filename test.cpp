@@ -17,14 +17,14 @@ Bassline bassline(3);
 Performer playMelody(melody, PIN_MELODY);
 Performer playBass(bassline, PIN_BASS);
 unsigned char SCALE[] = {0, 3, 5, 6, 7, 10};
-unsigned short periods[6];
+unsigned short periods[LEN_SCALE];
 
 double getFreq(unsigned char midiNum) {
   return 440 * pow(2, (midiNum - MIDI_A4) / 12.0);
 }
 
 void setup() {  
-  for (unsigned char i = 0; i < 6; ++i) {
+  for (unsigned char i = 0; i < LEN_SCALE; ++i) {
     periods[i] = round(1000000.0 / getFreq(SCALE[i] + MIDI_KEY));
   }
   

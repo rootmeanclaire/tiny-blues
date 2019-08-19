@@ -53,7 +53,7 @@ void Performer::step() {
       if (currNote->midi == REST) {
         period = 0;
       } else {
-        period = periods[currNote->midi % 6] << (5 - currNote->midi / 6);
+        period = periods[currNote->midi % LEN_SCALE] << (5 - currNote->midi / LEN_SCALE);
       }
       high = true;
       currNoteLen = 0;
@@ -75,7 +75,7 @@ void Performer::reset() {
   iTick = 0;
   startNote = 0;
   currNote = new Note();
-  period = periods[currNote->midi % 6] << (5 - currNote->midi / 6);
+  period = periods[currNote->midi % LEN_SCALE] << (5 - currNote->midi / LEN_SCALE);
   high = false;
   lastPeak = 0;
   currNoteLen = 0;
