@@ -4,8 +4,8 @@
 
 #define MIDI_A4 69
 #define MIDI_KEY (69 + 24)
-#define PIN_MELODY 5
-#define PIN_BASS 6
+#define PIN_MELODY 0
+#define PIN_BASS 1
 #define PIN_SEED 3
 
 Melody melody(4);
